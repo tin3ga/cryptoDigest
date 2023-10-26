@@ -1,0 +1,43 @@
+name: run main.py
+
+on:
+  schedule:
+    - cron: '10 * * * *' #  test at every 10th min of the hour
+env:
+  APP_EMAIL: ${{ secrets.APP_EMAIL }}
+  API_KEY: ${{ secrets.API_KEY }}
+  APP_PASS: ${{ secrets.APP_PASS }}
+  PERSONAL_EMAIL: ${{ secrets.PERSONAL_EMAIL }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v2
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: execute py script
+        run: python main.py
+
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "update event log"
+
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
