@@ -2,7 +2,7 @@ name: run main.py
 
 on:
   schedule:
-    - cron: '10 * * * *' #  test at every 10th min of the hour
+    - cron: '0 5 * * 0' #  run at 0500 UTC,equivalent to 0800 GMT(local time) every sunday
 env:
   APP_EMAIL: ${{ secrets.APP_EMAIL }}
   API_KEY: ${{ secrets.API_KEY }}
@@ -35,7 +35,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "updated event log" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "update event log" --allow-empty)
 
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
