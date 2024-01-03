@@ -32,7 +32,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: execute py script
-        run: python main.py
+        run: python ./crypto_digest/main.py
 
       - name: commit files
         run: |
