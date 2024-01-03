@@ -3,6 +3,10 @@ name: run main.py
 on:
   schedule:
     - cron: '0 5 * * 0' #  run at 0500 UTC,equivalent to 0800 GMT(local time) every sunday
+
+  workflow_dispatch:
+
+    
 env:
   APP_EMAIL: ${{ secrets.APP_EMAIL }}
   API_KEY: ${{ secrets.API_KEY }}
