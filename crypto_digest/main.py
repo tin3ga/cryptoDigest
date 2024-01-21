@@ -2,7 +2,7 @@ import os
 import logging
 import json
 import requests
-from notifier import NotificationManager
+from .notifier import NotificationManager
 
 URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 api_key = os.environ['API_KEY']
