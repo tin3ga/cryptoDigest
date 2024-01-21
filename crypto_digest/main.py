@@ -4,21 +4,20 @@ import json
 import requests
 from notifier import NotificationManager
 
-
 URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 api_key = os.environ['API_KEY']
 
 # implement custom logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler('../event.log')
+handler = logging.FileHandler('event.log')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-if __name__ == '__main__':
+def fetch_data():
     # fetch data from api
     header = {
         'X-CMC_PRO_API_KEY': api_key
@@ -52,3 +51,8 @@ if __name__ == '__main__':
         message_body = json.dumps(coins_list, indent=4)
         if notification_manager.send_email(message=message_body):
             logger.info("email sent successfully")
+
+
+if __name__ == '__main__':
+    fetch_data()
+
