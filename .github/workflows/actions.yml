@@ -6,7 +6,7 @@ on:
 
   workflow_dispatch:
 
-    
+
 env:
   APP_EMAIL: ${{ secrets.APP_EMAIL }}
   API_KEY: ${{ secrets.API_KEY }}
@@ -32,7 +32,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: execute py script
-        run: python ./crypto_digest/main.py
+        run: python app.py
 
       - name: commit files
         run: |
