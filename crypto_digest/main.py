@@ -1,10 +1,11 @@
 import os
 import logging
-import json
+from datetime import datetime, timezone
 import requests
 from typing import List
 from pydantic import BaseModel
 
+from .email_template import build_subject, render_digest
 from .notifier import NotificationManager
 
 URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
@@ -61,13 +62,15 @@ def fetch_data():
             ) for coin in data['data']]
         )
 
-        # json serialization of CoinDataResponse model
-        coins_list = coin_data_response.model_dump_json(indent=4)
-
         # send email and log event
+        generated_at = datetime.now(timezone.utc)
+        digest = render_digest(coin_data_response.coins, generated_at=generated_at)
         notification_manager = NotificationManager()
-        message_body = coins_list
-        if notification_manager.send_email(message=message_body):
+        if notification_manager.send_email(
+            subject=build_subject(generated_at),
+            text_body=digest.text_body,
+            html_body=digest.html_body,
+        ):
             logger.info("email sent successfully")
 
 
