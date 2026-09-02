@@ -1,3 +1,4 @@
+import ssl
 import unittest
 from datetime import datetime, timezone
 from types import SimpleNamespace
@@ -71,6 +72,10 @@ class NotificationManagerTests(unittest.TestCase):
         self.assertTrue(result)
         smtp_class.assert_called_once_with(host="smtp.gmail.com")
         smtp.starttls.assert_called_once()
+        tls_context = smtp.starttls.call_args.kwargs["context"]
+        self.assertEqual(tls_context.minimum_version, ssl.TLSVersion.TLSv1_2)
+        self.assertEqual(tls_context.verify_mode, ssl.CERT_REQUIRED)
+        self.assertTrue(tls_context.check_hostname)
         smtp.login.assert_called_once_with(
             user="sender@example.com", password="secret"
         )

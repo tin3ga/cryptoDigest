@@ -1,7 +1,7 @@
 import os
+import ssl
 from email.message import EmailMessage
 from email.utils import formataddr
-from ssl import create_default_context
 
 from smtplib import SMTP
 
@@ -22,8 +22,11 @@ class NotificationManager:
         message.set_content(text_body)
         message.add_alternative(html_body, subtype='html')
 
+        tls_context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH)
+        tls_context.minimum_version = ssl.TLSVersion.TLSv1_2
+
         with SMTP(host=HOST) as conn:
-            conn.starttls(context=create_default_context())
+            conn.starttls(context=tls_context)
             conn.login(user=self.app_email, password=self.app_pass)
             conn.send_message(message)
 
